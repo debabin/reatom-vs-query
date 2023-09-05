@@ -1,9 +1,102 @@
 import type { MockServerConfig } from 'mock-config-server';
 
+let users = [
+  {
+    id: 1,
+    name: 'debabin',
+    avatar: 'https://avatars.githubusercontent.com/u/45297354?v=4'
+  },
+  {
+    id: 2,
+    name: 'gaearon',
+    avatar: 'https://avatars.githubusercontent.com/u/810438?v=4'
+  },
+  {
+    id: 3,
+    name: 'artalar',
+    avatar: 'https://avatars.githubusercontent.com/u/27290320?v=4'
+  },
+  {
+    id: 4,
+    name: 't3dotgg',
+    avatar: 'https://avatars.githubusercontent.com/u/6751787?v=4'
+  }
+];
+
+const projects = [
+  {
+    title: '🎉 Mock Config Server',
+    description:
+      'tool that easily and quickly imitates server operation, create full fake api in few steps',
+    link: 'https://www.npmjs.com/package/mock-config-server'
+  },
+  {
+    title: '🔑 React Google ReCaptcha Ultimate',
+    description:
+      'tool that easily and quickly add Google ReCaptcha for your website or application',
+    link: 'https://www.npmjs.com/package/react-google-recaptcha-ultimate'
+  }
+];
+
 const mockServerConfig: MockServerConfig = {
   rest: {
     baseUrl: '/api',
     configs: [
+      {
+        path: '/data/:id',
+        method: 'get',
+        routes: [
+          {
+            data: users,
+            entities: {
+              query: {
+                type: 'friends'
+              }
+            }
+          },
+          {
+            data: projects,
+            entities: {
+              query: {
+                type: 'projects'
+              }
+            }
+          }
+        ],
+        interceptors: {
+          response: async (data, { setDelay }) => {
+            await setDelay(2000);
+            return data;
+          }
+        }
+      },
+      {
+        path: '/users',
+        method: 'put',
+        routes: [
+          {
+            data: { success: true },
+            interceptors: {
+              response: async (data, { request, setDelay, setStatusCode }) => {
+                await setDelay(3000);
+
+                if (request.body.id === 1) {
+                  setStatusCode(400);
+                  return { success: false };
+                }
+
+                users = users.map((user) => {
+                  if (user.id === request.body.id) {
+                    return { ...user, ...request.body };
+                  }
+                  return user;
+                });
+                return data;
+              }
+            }
+          }
+        ]
+      },
       {
         path: '/users',
         method: 'get',
@@ -338,28 +431,7 @@ const mockServerConfig: MockServerConfig = {
             }
           },
           {
-            data: [
-              {
-                id: 1,
-                name: 'debabin',
-                avatar: 'https://avatars.githubusercontent.com/u/45297354?v=4'
-              },
-              {
-                id: 2,
-                name: 'gaearon',
-                avatar: 'https://avatars.githubusercontent.com/u/810438?v=4'
-              },
-              {
-                id: 3,
-                name: 'artalar',
-                avatar: 'https://avatars.githubusercontent.com/u/27290320?v=4'
-              },
-              {
-                id: 4,
-                name: 't3dotgg',
-                avatar: 'https://avatars.githubusercontent.com/u/6751787?v=4'
-              }
-            ]
+            data: () => users
           }
         ],
         interceptors: {
@@ -392,7 +464,7 @@ const mockServerConfig: MockServerConfig = {
         ],
         interceptors: {
           response: async (data, { setDelay }) => {
-            await setDelay(2000);
+            await setDelay(700);
             return data;
           }
         }
@@ -402,20 +474,7 @@ const mockServerConfig: MockServerConfig = {
         method: 'get',
         routes: [
           {
-            data: [
-              {
-                title: '🎉 Mock Config Server',
-                description:
-                  'tool that easily and quickly imitates server operation, create full fake api in few steps',
-                link: 'https://www.npmjs.com/package/mock-config-server'
-              },
-              {
-                title: '🔑 React Google ReCaptcha Ultimate',
-                description:
-                  'tool that easily and quickly add Google ReCaptcha for your website or application',
-                link: 'https://www.npmjs.com/package/react-google-recaptcha-ultimate'
-              }
-            ],
+            data: projects,
             entities: { params: { id: 1 } }
           },
           {
@@ -431,7 +490,7 @@ const mockServerConfig: MockServerConfig = {
         ],
         interceptors: {
           response: async (data, { setDelay }) => {
-            await setDelay(2000);
+            await setDelay(700);
             return data;
           }
         }

@@ -26,3 +26,12 @@ export const getUsersPagination = (queries: Record<string, number>) =>
       total: number;
     };
   }>('/users', { params: queries });
+
+export const changeUser = (user: User) => api.put('/users', user);
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getUserWithSignal = (signal: any, id: string) =>
+  api.get<User>(`/users/${id}`, { signal });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getDataWithSignal = (signal: any, id: string, type: 'friends' | 'projects') =>
+  api.get<Project[] | User[]>(`/data/${id}`, { signal, params: { type } });

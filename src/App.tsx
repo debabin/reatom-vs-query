@@ -9,6 +9,11 @@ import { DependentQueriesExample } from './query/dependent-queries';
 import { PersisterExample } from './query/persister';
 import { PaginationExample } from './query/pagination';
 import { LoadMoreExample } from './query/load-more';
+import { QueryInvalidationExample } from './query/query-invalidation';
+import { OptimisticUpdateExample } from './query/optimistic-update';
+import { MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
+import { CancellationExample } from './query/cancellation';
 
 const router = createBrowserRouter([
   {
@@ -26,13 +31,26 @@ const router = createBrowserRouter([
   {
     path: '/loadmore',
     element: <LoadMoreExample />
+  },
+  {
+    path: '/query-invalidation',
+    element: <QueryInvalidationExample />
+  },
+  {
+    path: '/optimistic-update',
+    element: <OptimisticUpdateExample />
+  },
+  {
+    path: '/cancellation',
+    element: <CancellationExample />
   }
 ]);
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false
     }
   }
 });
@@ -48,10 +66,13 @@ const queryClient = new QueryClient({
 // );
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ReactQueryDevtools initialIsOpen={false} />
-    <RouterProvider router={router} />
-  </QueryClientProvider>
+  <MantineProvider withNormalizeCSS withGlobalStyles>
+    <Notifications />
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  </MantineProvider>
 );
 
 export default App;

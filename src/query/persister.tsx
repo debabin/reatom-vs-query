@@ -36,7 +36,7 @@ export const PersisterExample = () => {
   console.log('@withPersist', withPersist);
 
   React.useEffect(() => {
-    if (withPersist) return;
+    if (!withPersist) return;
     localStorage.setItem('users', JSON.stringify({ data: users }));
   }, []);
 
