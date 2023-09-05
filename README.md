@@ -1,4 +1,4 @@
-# 🔥 Reatom vs Tanstack query
+# 📦 REATOM vs TANSTACK QUERY делаем запросы правильно (data fetching)
 
 [![🍿 СТРИМ 📦 REATOM vs TANSTACK QUERY делаем запросы правильно (data fetching)](https://img.youtube.com/vi/vmSttefunmQ/maxresdefault.jpg)](https://youtube.com/live/vmSttefunmQ)
 
